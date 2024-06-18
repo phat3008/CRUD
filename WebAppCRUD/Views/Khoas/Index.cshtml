@@ -1,0 +1,158 @@
+﻿@model IEnumerable<WebAppCRUD.Entities.Khoa>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">
+                    Khoa
+
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal1">Thêm mới</button>
+                </h4>
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                <div class="live-preview">
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle table-nowrap mb-0">
+                            <thead class="thead-light text-center">
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Tên Khoa</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="fw-medium text-center">@item.Id</td>
+                                        <td class="text-center">@item.Name</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-id="@item.Id" data-ten="@item.Name">Cập nhật</button>
+                                            <form asp-controller="Khoa" asp-action="Xóa" method="post" style="display: inline;">
+                                                <a class="btn btn-danger" onclick="Delete('@item.Id')">Delete</a>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div>
+</div>
+
+<!-- Modal Create Khoa -->
+<div class="modal fade" id="createModal1" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Thêm mới Khoa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Thoát"></button>
+            </div>
+            <div class="modal-body"> 
+                <form id="createKhoaForm">
+                    <div class="mb-3">
+                        <label for="TenKhoa" class="form-label">Tên Khoa</label>
+                        <input type="text" class="form-control" name="Name" id="createName">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" onclick="PostData()" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Khoa -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Khoa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editKhoaForm">
+                    <input type="hidden" id="editIdK" name="id">
+
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="editName">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        function PostData() {
+            $.ajax({
+                url: "/Khoas/Create",
+                type: "post",
+                data: {
+                    name: $("#createName").val(),
+                },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#editModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var ten = button.data('ten');
+                var modal = $(this);
+                modal.find('#editIdK').val(id);
+                modal.find('#editName').val(ten);
+            });
+
+            $('#editKhoaForm').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "/Khoas/Edit",
+                    type: "post",
+                    data: formData,
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+        function Delete(id) {
+            $.ajax({
+                url: "/Khoas/Delete",
+                type: "post",
+                data: { id: id },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+    </script>
+}

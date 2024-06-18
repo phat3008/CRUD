@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    var khoas = ViewData["Khoas"] as List<WebAppCRUD.Entities.Khoa>;
+    var lops = ViewData["Lops"] as List<WebAppCRUD.Entities.Lop>;
+    var sinhviens = ViewData["Sinhviens"] as List<WebAppCRUD.Entities.Sinhvien>;
+}
+
+<div class="row">
+    <div class="col">
+        <h2>Khoa</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên Khoa</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var khoa in khoas)
+                {
+                    <tr>
+                        <td>@khoa.Name</td>
+                        <td>
+                            <a asp-action="EditKhoa" asp-route-id="@khoa.Id" class="btn btn-primary">Edit</a>
+                            <a asp-action="DeleteKhoa" data-khoaid="@khoa.Id" class="btn btn-danger deleteKhoaBtn">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModalKhoa">Create Khoa</a>
+        <!-- Modal tạo mới Khoa -->
+        <div class="modal fade" id="createModalKhoa" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create Khoa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createKhoaForm">
+                            <div class="mb-3">
+                                <label for="Name" class="form-label">Tên Khoa</label>
+                                <input type="text" class="form-control" name="Name" id="Name" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <h2>Lớp</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên Lớp</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lop in lops)
+                {
+                    <tr>
+                        <td>@lop.Name</td>
+                        <td>
+                            <a asp-action="EditLop" asp-route-id="@lop.Id" class="btn btn-primary">Edit</a>
+                            <a asp-action="DeleteLop" data-lopid="@lop.Id" class="btn btn-danger deleteLopBtn">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModalLop">Create Lớp</a>
+        <!-- Modal tạo mới Lớp -->
+        <div class="modal fade" id="createModalLop" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create Lớp</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createLopForm">
+                            <div class="mb-3">
+                                <label for="Name" class="form-label">Tên Lớp</label>
+                                <input type="text" class="form-control" name="Name" id="Name" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <h2>Sinh viên</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên Sinh viên</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sinhvien in sinhviens)
+                {
+                    <tr>
+                        <td>@sinhvien.Name</td>
+                        <td>
+                            <a asp-action="EditSinhvien" asp-route-id="@sinhvien.Id" class="btn btn-primary">Edit</a>
+                            <a asp-action="DeleteSinhvien" data-sinhvienid="@sinhvien.Id" class="btn btn-danger deleteSinhvienBtn">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModalSinhvien">Create Sinh viên</a>
+        <!-- Modal tạo mới Sinh viên -->
+        <div class="modal fade" id="createModalSinhvien" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create Sinh viên</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createSinhvienForm">
+                            <div class="mb-3">
+                                <label for="Name" class="form-label">Tên Sinh viên</label>
+                                <input type="text" class="form-control" name="Name" id="Name" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#createKhoaForm').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CreateKhoa", "All")',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#createModalKhoa').modal('hide');
+                            location.reload(); // Reload the page to see the new item
+                        } 
+                    },
+                    error: function () {
+                        alert('Error occurred while creating Khoa');
+                    }
+                });
+            });
+
+            $('#createLopForm').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CreateLop", "All")',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#createModalLop').modal('hide');
+                            location.reload(); // Reload the page to see the new item
+                        } else {
+                            alert('Error occurred while creating Lop');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while creating Lop');
+                    }
+                });
+            });
+
+            $('#createSinhvienForm').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CreateSinhvien", "All")',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#createModalSinhvien').modal('hide');
+                            location.reload(); // Reload the page to see the new item
+                        } else {
+                            alert('Error occurred while creating Sinhvien');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while creating Sinhvien');
+                    }
+                });
+            });
+
+            function deleteEntity(url, Id, successCallback) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { id: Id },
+                    success: function (response) {
+                        if (response.success) {
+                            successCallback();
+                        } else {
+                            alert('Error occurred while deleting.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while deleting.');
+                    }
+                });
+            }
+
+            // Delete Khoa
+            $('.deleteKhoaBtn').click(function () {
+                var khoaId = $(this).data('khoaid');
+                if (confirm('Bạn có chắc chắn muốn xóa Khoa này ? ')) {
+                    deleteEntity('@Url.Action("DeleteKhoa", "All")', khoaId, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            // Delete Lop
+            $('.deleteLopBtn').click(function () {
+                var lopId = $(this).data('lopid');
+                if (confirm('Bạn có chắc chắn muốn xóa Lớp này ? ')) {
+                    deleteEntity('@Url.Action("DeleteLop", "All")', lopId, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            // Delete Sinhvien
+            $('.deleteSinhvienBtn').click(function () {
+                var sinhvienId = $(this).data('sinhvienid');
+                if (confirm('Bạn có chắc muốn xóa sinh viên này?')) {
+                    deleteEntity('@Url.Action("DeleteSinhvien", "All")', sinhvienId, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+        });
+    </script>
+}
